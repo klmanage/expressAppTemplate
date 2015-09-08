@@ -1,0 +1,73 @@
+extends layout
+
+block content
+  
+  h1= title
+
+
+  h2 this is the view
+  p nesting is shown by indentation
+  |this is plain text shown by using a 'pipe' character
+
+  p Jade is a templating engine. It's really a preprocessor for generating Html from a more succinct and streamlined language. It has other capabilities - because it runs on the server - hence mixins can be used, though I don't know why.
+
+  p An issue arises when you consider the client side. Jade and handlebars etc. are server-side templating languages. That is the code will be processed on the server and sent to the client as plain html. For client-side dev we will send templates to the client and process them there.
+
+  p The exact process for processing templates on the client is a little vague. In the case of knockout it provides a mechanism for 'binding' values defined in a JS file to 'elements' defined in an html page.
+
+  p This entails adding 'additional' markup, via 'special' attributes, to our HTML page which KO can latch on to at runtime.
+
+  p Native javascript has the ability to interact with the HTML page through the browsers DOM. The DOM exposes elements through a variety of methods.
+
+  p We write JS code that 'interacts' with the 'page' via the DOM Api. GetElementById() is a native JS function that will return a DOM object representing an HTML element. We *must* provide an 'Id' in our markup which identifies the specific element that we are seeking to 'bind' to.
+
+  p JQuery offers a layer of abstraction over the browsers DOM that functions as a cleaner and more consistent API.
+
+  p It is still client-side code. The javascript which controls the page must be loaded into memory at the point of use.
+
+  p We achieve this by referencing our JS file via a script tag. This is a special tag that is processed by the browser as it parses the html document recieved from the server. A script tag causes the browser to Reequest the script file from the server and load it into memory.
+
+  p The script is responsible for creating and scoping objects. So when the script runs it will create objects in memory on the client and wait for interactions. 
+  p Behaviours in our code are triggered by 'events'. For example when a users types characters into a text input a number of different events are triggered in the browser. The click in the input window will raise an 'onfocus' event. We could therefore 'trap' this event by 'listening' for it and binding an 'event handler' to the event.
+
+  p What this means is that we can provide a procedure that, for example, opens an alert message when the user first clicks in the text box.
+  p The terminology here is that events are 'fired' or 'triggered' by some user interaction with the page. We setup functions or procedures - code that does some thing - such that they will be executed in response to that event.
+
+  p Now, how do we do that? Well, we need to write code that 'knows' when an event has been 'fired'. An event is defined on an element and different elements have different events.
+
+  p Actually, it is more precise to say that events are fired at different levels such as the Document or the Window. Now the Window belongs to the browser and not the particular document. And an Alert() function is defined at the level of the window.
+
+  Elements exist at the level of the document. That is anything related to the 'current' page is defined in the document. For example the document has an 'onclick' event defined.
+
+  p We can assign a handler to this document.onclick event like so:
+
+  document.onclick = function(){alert('you clicked');}
+
+  once this is defined clicking anywhere on the document, or page, will result in an alert message 'you clicked'.
+
+  P Scope!
+  p When is a JS object in scope? If I write some code inside of a function, for example:
+
+    function(){var myValue = 1;  } 
+
+  p then that value is only available inside that function.
+
+  p if I include a reference to this file in my page then it will be loaded but the variable 'myValue' will not be available in the console.
+
+  p On the other hand if I define the value 'outside' of a function then I 'accidentally' define it on a *Global* scope. That is it becomes an object of 'this' which in the browser is the 'window' object. (e.g. the declaration of 'mything' in models.js puts an object in the Global scope).
+
+  p avoiding Global scope is important but can we avoid it completely?
+
+  p Somewhere along the line there has to be a Global, basically a 'namespace'.
+
+  p The revealing module pattern is one way of 'limiting' globals without avoiding them altogether. We can assign an 'app specific' variable to an object which will be the 'container' for our application.
+
+  p for example: var referralApp = {};
+
+  p
+  | referralApp.Models=(function(){return{mybehaviour:
+  | somefunction,mydata: somefunction}})
+
+  p now, I can use referralApp.Models.mydata anywhere within my application. Anything 'internal to the 'mybehaviour' function will not be available globally.
+
+ 

@@ -1,0 +1,36 @@
+h2 Dynamic Data
+h3 This template has no relation to the Layout.jade
+
+p It works fine, it is just a static html file.
+
+h4 So Dynamic Data
+
+p The page is requested an perhaps some data is sent along with the request.
+p How is that data captured at the Route Handler?
+
+h2 Route Params
+p First let's try using the 'params' property of the 'Request' object.
+p This line should show the value sent as a 'route parameter'. For example, /topics/dyanmicdata/kevin should show
+h3 #{nameParam}
+
+h2 Query String
+
+p the format for a query string is '/whatever?age=10'
+p Query strings are only sent in a 'GET' request.
+p this is obtainable via the 'query' property on the Request object such as: 
+p 'var queryvalue = req.query.age'.
+p note that here you need to know the name of the query string parameter!!
+
+p So, in the current case, if I request 'topics/dynamicdata/kevin/?age=10' then the value sent in query string is
+h3 #{age}
+
+h2 Body
+p the Body is only available in a 'POST' request (actually it is available on GET as well but servers ignore it).
+
+p So, how to send a POST request? first you need to create a form on your web page.  So, lets create an 'input'
+<form method='post' action='http://localhost:3000/topics/dynamicdata/kevin'>
+<label>Occupation</label>
+<input type='text' name='occupation'/>
+<input type='submit' value='Submit' />
+</form>
+p value sent in body is #{occupation}

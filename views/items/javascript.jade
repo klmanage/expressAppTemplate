@@ -1,0 +1,57 @@
+extends ../layout
+
+block content
+    
+    h1 This page is in the Items folder under Views
+
+
+
+    h3 which demonstrates that we can have our routes point to any directory structure. 
+
+    p Finally got this working! You have to configure the view engine with 'app.set('view options',{layout:false});' otherwise the 'extends' does not work accross directories.
+
+    h3 Dynamic or Static
+    p Now using this approach we are creating pages dynamically, i.e. on the server, but we have to specify every route manually.
+
+    p So, whilst we call it 'Dynamic' we are not actually processing any code within the page itself. In fact all of the 'Content' of the page is 'Static'.
+
+    p Jade is preprocessing our page content into Html. It's just a convenience at this point.
+
+    p In Asp.net we have 'Controllers' that process Requests, do some work and then create and send Responses. Within an Asp.net we have access to VARIABLES within the page. For example we can take user input and echo it back to them.
+
+    p Nodejs/Express can do something similar. We need some kind of 'placeholder', something that can be resolved at Runtime. Asp.net uses Razor for this, though there are other 'view engines'.
+
+    p So, how do we do this? How do we pass data to our View using NodeJS/Express?
+
+    p Okay, well this header contains content set on the server
+
+    h2 #{myValue}
+
+    p I did this simply by passing an object as the second param to res.render(). It looks like this "{myValue: 'my new value'}"
+
+    p Then in the Jade template I write 
+
+    |"h2 #{'#{myValue}'}"
+
+    p In Asp.net a pattern matching is used, we set out route patterns and they will automatically look for the corresponding code file, or rather Action Method, to execute.
+    h3 Moving to the Client
+    p My next issue is sending Javascript to the Client. Clearly I could inject javascript into each page. That is one option. Or I could instantiate a Single Page Application structure and push all routing to the Client Side.
+
+    p What I mean is that I could insert script tags into individual pages so that all of the script needed by that page is available on the page.
+
+    p The drawback with this approach is that I may need to pull down certain libraries as well, such as JQuery or Knockout.
+
+    p Really we only want to do this once and hope that the library is cached.
+
+    p Caching, incidentally, is a rather big issue for web performance. It means a users browser may have already brought down the library in question.
+
+    p Okay, the first way is to use HTTP Headers:
+    li  Cache-control:no-cache
+    li instructs the browser not to cache the content at all
+    li Expires: Tue, 20 Mar 2015
+    li instructs the browser to expire its cached copy by the given time.
+
+    li ETag: ab10be20
+    p instructs the browser to consider ab10be20 as a hash of the contents li and only if the value changes upon subsequent requests should it need to download new contents
+
+    p But, all of these are 'advisory' - you cannot 'enforce the purging of caches remotely'

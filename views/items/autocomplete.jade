@@ -1,0 +1,64 @@
+extends ../layout
+
+block content
+    h1 Autocomplete
+    h2 This page is in the Items folder under Views
+
+    p this is all about trying to write your own Typeahead (FKA Autocomplete)
+    p There are two parts to this: First the UI.
+    p We are creating a 'control'. It's a regular <strong>input</strong> element that has a 
+    p <strong>select</strong> embedded in it. The Select is only activated when results are received.
+    p Obviously, this is a 'layout' or 'styling' problem: How do I create a select and have it attach to the input.
+    p First let's explore what a regular Select element looks like and what its various attributes are.
+
+    p Side not worth mentioning: Mozilla describes the Select element on one page and the Option and OptGroup elements on other separate pages. So, you have to dig a little to find stuff:
+
+    p Anyway, Option element has the following attrs:
+    <ul>
+    <li>Value</li>
+    <li>Selected</>
+    <li>label</>
+    <li>disabled</>
+    </ul>
+
+    p the <strong>Value</strong> attribute is defined thus: <blockquote> The content of this attribute represents the value to be submitted with the form, should this option be selected. If this attribute is omitted, the value is taken from the text content of the option element.</blockquote>
+
+    p Note: the last line. If you don't specify a value the text content is submitted. If your options list is created dynamically then it is this part that is actually updated.
+
+    p Note:It is supposed that the select will be used inside a form element. In other words the select will be a child of a Form and the selected value will be collected up on Form submission.
+
+    p In fact the Select element has a 'form' attribute which allows you to specify which form it 'belongs' to which allows you to have the Select anywhere in the document and still have its value posted with the correct form (cool!)
+
+    p Back to OPTIONS:
+    p <strong>Selected</strong> the 'Selected' attribute simply specifies which option is selected by default. <strong>Only One</strong> option can have a 'selected' attribute <strong>Unless</strong> the parent select has a <strong>Multiple</strong> attribute.
+
+
+    div
+      <select name="dropdown">
+      <option value="1">One</option>
+      <option value="2" selected>Two</option>
+      <option value="3">Three</option>
+      </select>
+    br
+
+
+
+
+
+    .auto
+      input(
+        type='text'
+        id='autocomplete'
+      )
+    p This works but we are not clearing the previous added option values. In other words it's not really dynamic!!!
+
+    p It's probably better to build the select list anew each time and inject into the DOM.
+    
+    div
+      <select id="selector"></select>
+
+    p(id="selectedtext")
+    script(
+    	type='text/javascript'
+    	src='../javascripts/autocomplete.js'
+    )

@@ -1,0 +1,121 @@
+extends layout
+
+block content
+
+	h1 This is the server side page
+
+	p I just learned that you <strong>have</strong> to use indentation after 'block content'
+
+	p So server side, what does this really mean?
+	p First and foremost it means that the page is processed on the server and sent down to the client as a html document.
+
+	p The document can have scripts and links which will in turn bring down stylesheets and javascript when it is parsed.
+
+	p But, we can also do some work on the server. The template engine is 'pre-processed' this means that it is parsed on the server and any 'local' variables etc are evaluated before the page is sent in the response.
+
+	p When I enter the command 'gulp start' the node executable is executed and it runs the file in 'www/bin'. In other words a Node Process is started up and the 'server' listens for requests.
+
+	p This simply proves that what is happening is simply some 'objects' are created in memory, some tcp/ip configuration is setup and a 'program' is running. Now, every request to the port '3000' will cause some code to run. This code will look in the request headers and try to match the URL to a pre-defined route. If it finds a route it will execute that code. if that code produces a Response then that Response will be sent to the Browser.
+
+	p When I run this command there is no instance of a Browser and so the 'server' just listens. In other words nothing happens until a request is received. If I make a request to port 4000, for example, then nothing will happen (not strictly true) because there is no 'service' *listening* on that port.
+
+	p We must understand what a PORT is. It is defined by the protocol in as much as a service that implements that protocol will by definition listen for requests on a specific port. This is *networking*. In effect we BIND to a port, or rather we BIND an endpoint to a PORT and an IP Address.
+
+	p A request to www.google.com is in reality a request to www.google.com:80. That is *all* requests to Google will *by default* be directed to PORT 80.
+
+	p The WWW... the URL is a human readable value. In fact the system 'translates' or RESOLVES that 'address' to an IP Address and ultimately a MAC address.
+
+	p These two entities are defined at different layers of the networking STACK. This is why in order to understand how networking works or rather IS IMPLEMENTED, we use a Layered Model.
+
+	p We type an address in the Browser. The browser, which interacts with the Operating System, constructs a REQUEST.
+	No, this is not good. Start again. We type an address in the Browser and click enter. We know that some magic happens and an HTTP request is sent accross the wire.
+
+	p The Browser is an APPLICATION. This application is written/designed to work with the Operating System. The Operating System *defines* a Networking Stack, in other words a system for communicating with other computers.
+
+	p By design the network stack is STANDARDISED. Which means it does not require the OS on my computer to match the OS on the target computer.
+
+	p The only requirement is that *both* ends of the communication use the same PROTOCOL. Namely, TCP/IP. This is why it is layered and this is why different PROTOCOLS are define at different layers of the stack.
+
+	p HTTP is not the only protocol. In fact HTTP is designed for a specific type of network interaction. It is the primary protocol of the web and as such it has very specific structure and pattern. For example it is Stateless (big topic).
+
+	p FTP is another protocol which is optimised (i.e. designed specifically for certain use cases) for file transfer. SMTP is for Email.
+
+	p You might reasonably wonder why these protocols are different and even necessary? The answer is that ultimately all protocols will be *reduced* to *packets* on the wire.
+	What does that mean? It's like saying you can send a Novel or a Screenplay using Morse code. This may not be a good example but it will suffice. A Novel is constructed in a very different way from a screen play (less Metadata) but ultimately both are 'text'. Similarly, a HTTP request has different form and content from an FTP request yet they both will be sent accross the wire in the same way.
+
+	p This is possible because the lower level protocols are content agnostic. That is they stipulate a minimum and maximum set of variables. The networking stack is a transformer. Each stage serves to repackage the data into a form suitable for transmission. In doing this the aim is be able to decompose a message into pieces and then recompose the pieces into the same message at the other end.
+
+	p It is really important to understand this as soon as possible. It explains so many things about networking that are hard to understand otherwise.
+
+	p the essential thing is this: we have an object, say an image, which we want to transfer from our 'local' machine to some 'remote' machine (for whatever reason). For this to happen our machine must 'know' how to decompose this object into a form suitable for sending, in other words it must convert its current form into the form specified in the protocol we are using.
+
+	p We can examine the fundamental units of networking using software, PACKET SNIFFERS. What we will see is that 'our content' is on a part of what is transmitted. There is lots of other information, lots of other requests (communication) going on. This is because the process of network communication is quite complex and involves a number of OPERATIONS above and beyond simply delivering our content.
+
+	p Foremost amongst these is the process of machines 'talking' to each other. Establishing a connection: fundamental thing. There have to be two ends to a communication. In order to communicate there has to be a two-way exchange. Initially we must IDENTIFY the other computer. A request is sent to a computer we know about (DNS) asking for a reference to a computer we do not know about (the target). If we do not know the 'real' address of our target we need an intermediary who does know. In this way all computers *must* be registered with the intermediary To do this a computer must know the address of a dns server. The dns server has a system for narrowing down the possible address/url combinations.
+
+	p The process of DNS is called Name Resolution and its purpose is simply to ascertain the actual IP address of a Host which is registered for the Domain Name.
+
+	p In a URL like www.mywebsite.com the parts separated by dots give a Heirarchical definition of the DOMAIN.
+
+	p To Resolve the address the DNS resolver works BACKWARDS:
+	p In other words the highest level domain is 'com', then 'mywebsite' then 'www'.
+	p if we just put 'mywebsite.com' that will also work if that name is registered with DNS.
+
+	p In order to Register a Domain with DNS we need some way to Host our Domain in a DNS Infrastructure.
+
+	p We can have a Private Address Space, one that is incapable of Routing out on to the public Internet. There are certain ranges of addresses within the IPV4 address space that are reserverd for Private networks. An example is 192.168.0.0/24.
+
+	p In order to make use of Name Resolution we must have a DNS service in operation. And this service must be made Authoratative for that address space. This means that each client machine on our network should be configured to use the Authoratative DNS service to resolve host names.
+
+	p Normally, in a private network, the DNS server would be configured with the Address of a DNS Host on the public Internet which it uses for non-local lookups. This enables 'local' clients to issue dns lookups for Internet Sites and recievice responses containing the IP Address of the Host.
+
+	p Bearing in mind that each Host on a Private Network is unable to communicate directly with any other Host that is not on the same subnet, there is obviously a need for some kind of system of joining up subnets.
+
+	p In effect what we need is a way for 192.168.0.1 to communicate with 10.10.10.50. 
+
+	p DNS may well know 'who' the 10 address belongs to but that does not mean that 192 can communicate with it. The solution is to have an intermediary take care of the problem for us.
+
+	p This is what Routers do. A router is an 'intelligent' device which is able to examine the Headers of IP Packets and establish the Source and Destination Address.
+
+	p As such it can be configured to 'route' requests from one subnet to another by effectively 'bridging' the networks. It can do this because it has 'two' network interfaces. One which is bound to the 192 space and another which is bound to the 10 space. Thus our 192 machine can communicate with the router and the 10 machine can communicate with the router.
+
+	p The router examines the packets it receives and looks for the destination address. It then looks up the address in its routing table. If it finds a record for that address it will 'forward' the packet to the 'next hop' as setout in the routing table. Before it does this it replaces the source address in the packet with its own interface address. This allows the host which is responding to send its response to an address on its own subnet (i.e. the router). When the response reaches the router the router is able to see that it is a response and not a new request. The router handles responses by adding back the address of the original requester and sending the packet back to that address through its connected interface.
+	p in practice this means that a router is required to communicate between different subnets. But, there are routers and routers!!
+
+	p High performance routers can be very expensive as the router is always potentially a 'bottleneck' in a network.
+
+	p Switches which are simpler and less expensive can also sometimes do rudimentary Routing. Some Layer 3 Switches can do IP Layer routing rather than layer 2 (MAC) routing.
+
+	p A router is just a machine that picks up packets, examines them and sends them on their way or drops them. Any computer can be configure to perform the same role. But, performance, security and reliability dictate that most of the time you will be using a dedicated router.
+
+	p Switches introduce another complication namely Virtual Lans or VLAN's. VLAN's offer an alternative way of segmenting a network (segmenting a network is where we deliberately chop a larger network into a series of 'Subnets'). VLAN's use a kind of routing which is not so sophisticated as a dedicated router. In essence with VLAN's we Tag our packets, not sure how, but we then set the individual ports on the switch to reject packets that are not tagged.
+
+	p There is quite a lot more to VLAN's than this but in essence what it allows us to do is 'segment' the network. So we better explain what Segmentation actually is.
+
+	p When we configure a subnet we are actually creating a Broadcast domain. This means that every machine in the subnet will 'hear' *all* communications on the subnet. Even if a packet is not destined for our machine our network interface will still have to process the signal, if only to immediately drop it. This results in a very 'chatty' network; even when no actual work is being done every machine on the network is constantly sending out requests and constantly receiving requests. In the worst case scenario, where a device on the network has a fault and stops behaving correctly we can end up with a 'broadcast storm' whereby there is so much of this low level traffic being generated that the network is 'saturated' and unable to process 'normal' traffic.
+
+	p I've gone a little bit further with basic networking than I intended here but to get back to the original thought "when I enter the command 'gulp start'..."
+
+	p My point is that a 'server' is first and foremost a network application. A web server implements the http protocol and relies on lower level components of the Runtime environment and the OS to take care of the lower level protocols such as TCP/IP and Ethernet.
+
+	p A Node server can be any type of network server - because that is the way that Node was written. It is designed to interface with any OS with regard to Network level protocols.
+
+	p Node implements Sockets (Port, IP Address,)
+
+	p Digression on Sockets: There are two basic types (that we are interested in) Stream Sockets and Datagram Sockets.
+
+	p TCP - Tranmission Control Protocol - guarantees that your packets are delivered in the order they were sent and are error-free.
+
+	p UDP - User Datagram Protocol - does not guarantee that a packet will reach its destination, let alone arrive in order. But it does guarantee it will be error free.
+
+	p The key difference is 'overhead' and therefor performance.
+
+	p For TCP to work it has to maintain a 'connection' between client and host. This is negotiated at the start and maintained so that the sender is informed that each packet has safely arrived and can resend if necessary.
+
+	p For UDP no connection is needed. A packet is built, header information added to specify the destination and it is sent.
+
+	p UDP is useful for applications that require speed but for whom occasional dropped packets are not really a big problem.
+
+	p For chat TCP is important but for Multiplayer Games, Video and Audio UDP is preferred.
+
+	p To maintain quality on top of UDP requires protocols higher up the stack.
